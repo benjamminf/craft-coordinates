@@ -1,5 +1,5 @@
 # Coordinates
-A Twig filter for Craft CMS that finds the latitude and longitude from an address.
+Twig filters for Craft CMS that finds the latitude and longitude from an address.
 
 The plugin fetches the coordinates through the Google Maps API *without* the need for an API key. Simply install the plugin and being using it.
 
