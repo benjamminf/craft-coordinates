@@ -23,9 +23,9 @@ Since this plugin fetches data from Google's servers, it's highly recommended th
 
 ## API
 
-Filter | Description
--|-
+Filter                       | Description
+-----------------------------|------------------------------------------------------------------
 coordinates(separator = ',') | Returns the latitude and longitude, separated by a custom string.
-latitude | Returns the latitude as a number.
-longitude  | Returns the longitude as a number.
-formatAddress | Returns a standardised address format.
+latitude                     | Returns the latitude as a number.
+longitude                    | Returns the longitude as a number.
+formatAddress                | Returns a standardised address format.
