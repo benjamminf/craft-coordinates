@@ -6,6 +6,8 @@ use Twig_Filter_Method; // TODO Deprecated class - if anyone can be bothered, fi
 
 class CoordinatesTwigExtension extends \Twig_Extension
 {
+	private static $_cache;
+
 	/**
 	 * Returns all information about an address
 	 *
@@ -14,26 +16,33 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	protected function getAddressData($address)
 	{
-		$data = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address));
-		$data = json_decode($data);
-
-		if($data->status == 'OK' && !empty($data->results))
+		if(!is_array(self::$_cache))
 		{
-			$data = $data->results[0];
-			$loc = $data->geometry->location;
-
-			$formatted_address = $data->formatted_address;
-			$latitude = $loc->lat;
-			$longitude = $loc->lng;
-
-			return array(
-				'address' => $data->formatted_address,
-				'latitude' => $loc->lat,
-				'longitude' => $loc->lng
-			);
+			self::$_cache = array();
 		}
 
-		return false;
+		if(!array_key_exists($address, self::$_cache))
+		{
+			$data = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address));
+			$data = json_decode($data);
+			$addressData = false;
+
+			if($data->status == 'OK' && !empty($data->results))
+			{
+				$data = $data->results[0];
+				$loc = $data->geometry->location;
+
+				$addressData = array(
+					'address' => $data->formatted_address,
+					'latitude' => $loc->lat,
+					'longitude' => $loc->lng
+				);
+			}
+
+			self::$_cache[$address] = $addressData;
+		}
+
+		return self::$_cache[$address];
 	}
 
 	/**
