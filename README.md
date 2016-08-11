@@ -15,6 +15,8 @@ The plugin fetches the coordinates through the Google Maps API *without* the nee
 
 ## API
 
+### Templates
+
 Filter                                           | Description
 -------------------------------------------------|------------------------------------------------------------------
 `coordinates(separator=',')` or `coords(sep...)` | Returns the latitude and longitude, separated by a custom string.
@@ -24,10 +26,19 @@ Filter                                           | Description
 
 Function               | Description
 -----------------------|--------------------------------------------------------------------
-`addressData(address)` | Returns the latitude, longitude, and formatted address as an object
+`addressData(address)` | Returns a coordinates model instance from an address
+
+### CoordinatesModel
+
+TODO
 
 
 ## Changelog
+
+#### v1.2.0
+- `Added` Added Twig functions for getting center and average coordinates for a list of coordinates
+- `Improved` `addressData()` now returns a Coordinates model rather than a plain object
+- `Improved` Refactored code and improved API
 
 #### v1.1.0
 - `Added` Added shorthand filters `lat`, `lng`, and `coords`, as well as a `addressData()` function

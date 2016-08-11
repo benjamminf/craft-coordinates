@@ -30,7 +30,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			new Twig_SimpleFunction('addressData', array($this, 'getAddressData')),
+			new Twig_SimpleFunction('coordinates', array($this, 'getCoordinatesModel')),
+			new Twig_SimpleFunction('centerCoords', array($this, 'getCenter')),
+			new Twig_SimpleFunction('averageCoords', array($this, 'getAverage')),
 		);
 	}
 
@@ -58,9 +60,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 * @param $address
 	 * @return mixed
 	 */
-	public function getAddressData($address)
+	public function getCoordinatesModel($address)
 	{
-		return craft()->coordinates->getAddressData($address);
+		return craft()->coordinates->getModel($address);
 	}
 
 	/**
@@ -71,9 +73,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function getLatitude($address)
 	{
-		$data = craft()->coordinates->getAddressData($address);
+		$model = craft()->coordinates->getModel($address);
 
-		return $data ? $data['latitude'] : false;
+		return $model ? $model->latitude : false;
 	}
 
 	/**
@@ -84,9 +86,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function getLongitude($address)
 	{
-		$data = craft()->coordinates->getAddressData($address);
+		$model = craft()->coordinates->getModel($address);
 
-		return $data ? $data['longitude'] : false;
+		return $model ? $model->longitude : false;
 	}
 
 	/**
@@ -98,9 +100,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function getCoordinates($address, $separator = ',')
 	{
-		$data = craft()->coordinates->getAddressData($address);
+		$model = craft()->coordinates->getModel($address);
 
-		return $data ? $data['latitude'] . $separator . $data['longitude'] : false;
+		return $model->getCoordinates($separator);
 	}
 
 	/**
@@ -111,8 +113,26 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function formatAddress($address)
 	{
-		$data = craft()->coordinates->getAddressData($address);
+		$model = craft()->coordinates->getModel($address);
 
-		return $data ? $data['address'] : false;
+		return $model ? $model->getFormattedAddress() : false;
+	}
+
+	/**
+	 * @param array $coords
+	 * @return mixed
+	 */
+	public function getCenter(array $coords)
+	{
+		return craft()->coordinates->getCenterCoordinates($coords);
+	}
+
+	/**
+	 * @param array $coords
+	 * @return mixed
+	 */
+	public function getAverage(array $coords)
+	{
+		return craft()->coordinates->getAverageCoordinates($coords);
 	}
 }
