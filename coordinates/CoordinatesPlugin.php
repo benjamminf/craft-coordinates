@@ -1,46 +1,48 @@
 <?php
 namespace Craft;
 
+/**
+ * Class CoordinatesPlugin
+ *
+ * Thank you for using Craft Coordinates!
+ * @see https://github.com/benjamminf/craft-coordinates
+ * @package Craft
+ */
 class CoordinatesPlugin extends BasePlugin
 {
-	/**
-	 * The name of the plugin
-	 *
-	 * @return mixed
-	 */
-	function getName()
+	public function getName()
 	{
-		return Craft::t('Coordinates');
+		return Craft::t("Coordinates");
 	}
 
-	/**
-	 * Current version
-	 *
-	 * @return string
-	 */
-	function getVersion()
+	public function getDescription()
 	{
-		return '1.0.1';
+		return Craft::t("Twig filters for Craft CMS that finds the latitude and longitude from an address");
 	}
 
-	/**
-	 * The knucklehead who wrote this plugin
-	 *
-	 * @return string
-	 */
-	function getDeveloper()
+	public function getVersion()
+	{
+		return '1.1.0';
+	}
+
+	public function getDeveloper()
 	{
 		return 'Benjamin Fleming';
 	}
 
-	/**
-	 * His fancy pants website which probably doesn't exist
-	 *
-	 * @return string
-	 */
-	function getDeveloperUrl()
+	public function getDeveloperUrl()
 	{
-		return 'http://benf.co';
+		return 'http://benjamminf.github.io';
+	}
+
+	public function getDocumentationUrl()
+	{
+		return 'https://github.com/benjamminf/craft-coordinates';
+	}
+
+	public function getReleaseFeedUrl()
+	{
+		return 'https://raw.githubusercontent.com/benjamminf/craft-coordinates/master/releases.json';
 	}
 
 	/**

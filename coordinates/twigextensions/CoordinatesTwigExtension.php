@@ -2,49 +2,16 @@
 namespace Craft;
 
 use Twig_Extension;
-use Twig_Filter_Method; // TODO Deprecated class - if anyone can be bothered, fix this please
+use Twig_SimpleFunction;
+use Twig_SimpleFilter;
 
+/**
+ * Class CoordinatesTwigExtension
+ *
+ * @package Craft
+ */
 class CoordinatesTwigExtension extends \Twig_Extension
 {
-	private static $_cache;
-
-	/**
-	 * Returns all information about an address
-	 *
-	 * @param $address
-	 * @return array|bool
-	 */
-	protected function getAddressData($address)
-	{
-		if(!is_array(self::$_cache))
-		{
-			self::$_cache = array();
-		}
-
-		if(!array_key_exists($address, self::$_cache))
-		{
-			$data = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address));
-			$data = json_decode($data);
-			$addressData = false;
-
-			if($data->status == 'OK' && !empty($data->results))
-			{
-				$data = $data->results[0];
-				$loc = $data->geometry->location;
-
-				$addressData = array(
-					'address' => $data->formatted_address,
-					'latitude' => $loc->lat,
-					'longitude' => $loc->lng
-				);
-			}
-
-			self::$_cache[$address] = $addressData;
-		}
-
-		return self::$_cache[$address];
-	}
-
 	/**
 	 * The name of the Twig extension
 	 *
@@ -56,6 +23,18 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	}
 
 	/**
+	 * Register the Twig functions
+	 *
+	 * @return array
+	 */
+	public function getFunctions()
+	{
+		return array(
+			new Twig_SimpleFunction('addressData', array($this, 'getAddressData')),
+		);
+	}
+
+	/**
 	 * Register the Twig filters
 	 *
 	 * @return array
@@ -63,11 +42,25 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	public function getFilters()
 	{
 		return array(
-			'latitude' => new Twig_Filter_Method($this, 'getLatitude'),
-			'longitude' => new Twig_Filter_Method($this, 'getLongitude'),
-			'coordinates' => new Twig_Filter_Method($this, 'getCoordinates'),
-			'formatAddress' => new Twig_Filter_Method($this, 'formatAddress')
+			new Twig_SimpleFilter('latitude', array($this, 'getLatitude')),
+			new Twig_SimpleFilter('lat', array($this, 'getLatitude')),
+			new Twig_SimpleFilter('longitude', array($this, 'getLongitude')),
+			new Twig_SimpleFilter('lng', array($this, 'getLongitude')),
+			new Twig_SimpleFilter('coordinates', array($this, 'getCoordinates')),
+			new Twig_SimpleFilter('coords', array($this, 'getCoordinates')),
+			new Twig_SimpleFilter('formatAddress', array($this, 'formatAddress')),
 		);
+	}
+
+	/**
+	 * Returns the latitude, longitude and formatted address from an address
+	 *
+	 * @param $address
+	 * @return mixed
+	 */
+	public function getAddressData($address)
+	{
+		return craft()->coordinates->getAddressData($address);
 	}
 
 	/**
@@ -78,9 +71,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function getLatitude($address)
 	{
-		$data = $this->getAddressData($address);
+		$data = craft()->coordinates->getAddressData($address);
 
-		return $data ? $data['latitude'] : '';
+		return $data ? $data['latitude'] : false;
 	}
 
 	/**
@@ -91,9 +84,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function getLongitude($address)
 	{
-		$data = $this->getAddressData($address);
+		$data = craft()->coordinates->getAddressData($address);
 
-		return $data ? $data['longitude'] : '';
+		return $data ? $data['longitude'] : false;
 	}
 
 	/**
@@ -105,9 +98,9 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function getCoordinates($address, $separator = ',')
 	{
-		$data = $this->getAddressData($address);
+		$data = craft()->coordinates->getAddressData($address);
 
-		return $data ? $data['latitude'] . $separator . $data['longitude'] : '';
+		return $data ? $data['latitude'] . $separator . $data['longitude'] : false;
 	}
 
 	/**
@@ -118,8 +111,8 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	 */
 	public function formatAddress($address)
 	{
-		$data = $this->getAddressData($address);
+		$data = craft()->coordinates->getAddressData($address);
 
-		return $data ? $data['address'] : $address;
+		return $data ? $data['address'] : false;
 	}
 }
