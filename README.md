@@ -35,6 +35,11 @@ TODO
 
 ## Changelog
 
+#### v1.3.0
+- `Added` Added ability to extract parts of an address (country, state, etc.)
+- `Added` Added URL parameter to coordinates model that links an address or set of coordinates to Google Maps
+- `Fixed` Fixed name of `addressData` function
+
 #### v1.2.0
 - `Added` Added Twig functions for getting center and average coordinates for a list of coordinates
 - `Improved` `addressData()` now returns a Coordinates model rather than a plain object
