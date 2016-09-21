@@ -11,6 +11,17 @@ The plugin fetches the coordinates through the Google Maps API *without* the nee
 
 {{ 'flinders STREET melbourne, Victoria, 3000' | formatAddress }}
 {# Outputs 'Flinders Street, Melbourne VIC 3000, Australia' #}
+
+{% set address = addressData('Flinders St, Melbourne VIC 3000') %}
+{{ address.coordinates }} {# Outputs '-37.8182609,144.9648863' #}
+{{ address.formattedAddress }} {# Outputs 'Flinders Street, Melbourne VIC 3000, Australia' #}
+{{ address.latitude }} {# Outputs -37.8182609 #}
+{{ address.longitude }} {# Outputs 144.9648863 #}
+{{ address.url }} {# Outputs 'https://www.google.com/maps/place/Flinders...' #}
+{% for label, part in address.parts %}
+	{{ label }} {# Outputs 'country' | 'state' | ... #}
+	{{ part }} {# Outputs 'Australia' | 'Victoria' | ... #}
+{% endfor %}
 ```
 
 ## API
