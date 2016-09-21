@@ -30,7 +30,7 @@ class CoordinatesTwigExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			new Twig_SimpleFunction('coordinates', array($this, 'getCoordinatesModel')),
+			new Twig_SimpleFunction('addressData', array($this, 'getCoordinatesModel')),
 			new Twig_SimpleFunction('centerCoords', array($this, 'getCenter')),
 			new Twig_SimpleFunction('averageCoords', array($this, 'getAverage')),
 		);

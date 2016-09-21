@@ -16,7 +16,9 @@ class CoordinatesService extends BaseApplicationComponent
 	 */
 	public function getAddressData($address)
 	{
-		$cacheKey = 'coordinates:' . md5(trim($address));
+		$plugin = craft()->plugins->getPlugin('coordinates');
+
+		$cacheKey = 'coordinates-' . $plugin->getVersion() . ':' . md5(trim($address));
 		$addressData = craft()->cache->get($cacheKey);
 
 		if(!$addressData)
@@ -29,8 +31,52 @@ class CoordinatesService extends BaseApplicationComponent
 				$data = $data->results[0];
 				$loc = $data->geometry->location;
 
+				$parts = [];
+
+				foreach($data->address_components as $part)
+				{
+					$type = $part->types[0];
+					$parts[$type] = $part->long_name;
+
+					if(in_array('postal_code', $part->types))
+					{
+						$parts['postal_code'] = $part->long_name;
+					}
+
+					if(in_array('country', $part->types))
+					{
+						$parts['country'] = $part->long_name;
+					}
+
+					if(in_array('administrative_area_level_1', $part->types))
+					{
+						$parts['state'] = $part->long_name;
+					}
+
+					if(in_array('administrative_area_level_2', $part->types))
+					{
+						$parts['council'] = $part->long_name;
+					}
+
+					if(in_array('locality', $part->types))
+					{
+						$parts['suburb'] = $part->long_name;
+					}
+
+					if(in_array('route', $part->types))
+					{
+						$parts['street'] = $part->long_name;
+					}
+
+					if(in_array('street_number', $part->types))
+					{
+						$parts['street_number'] = $part->long_name;
+					}
+				}
+
 				$addressData = array(
 					'address' => $data->formatted_address,
+					'parts' => $parts,
 					'latitude' => $loc->lat,
 					'longitude' => $loc->lng,
 				);
@@ -88,6 +134,10 @@ class CoordinatesService extends BaseApplicationComponent
 		return $this->getModelFromCoordinates($lat, $lng);
 	}
 
+	/**
+	 * @param $value
+	 * @return CoordinatesModel|null
+	 */
 	public function getModel($value)
 	{
 		if($value instanceof CoordinatesModel)
@@ -180,5 +230,24 @@ class CoordinatesService extends BaseApplicationComponent
 		$lat = atan2($z, $hyp) * 180 / pi();
 
 		return $this->getModelFromCoordinates($lat, $lng);
+	}
+
+	/**
+	 * @param $lat
+	 * @param $lng
+	 * @return string
+	 */
+	public function getUrl($lat, $lng)
+	{
+		return "http://www.google.com/maps/place/{$lat},{$lng}";
+	}
+
+	/**
+	 * @param $address
+	 * @return string
+	 */
+	public function getAddressUrl($address)
+	{
+		return 'http://www.google.com/maps/place/' . urlencode($address);
 	}
 }

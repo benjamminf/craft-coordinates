@@ -22,7 +22,7 @@ class CoordinatesPlugin extends BasePlugin
 
 	public function getVersion()
 	{
-		return '1.2.0';
+		return '1.3.0';
 	}
 
 	public function getDeveloper()

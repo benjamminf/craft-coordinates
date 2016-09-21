@@ -35,6 +35,35 @@ class CoordinatesModel extends BaseModel
 		return $this->getCoordinates($separator);
 	}
 
+	public function getParts()
+	{
+		$data = $this->_getAddressData();
+
+		return $data ? $data['parts'] : [];
+	}
+
+	public function getPart($part)
+	{
+		$parts = $this->getParts();
+
+		return isset($parts[$part]) ? $parts[$part] : false;
+	}
+
+	public function getUrl()
+	{
+		$address = $this->getFormattedAddress();
+
+		if($address)
+		{
+			return craft()->coordinates->getAddressUrl($address);
+		}
+
+		$lat = $this->getLat();
+		$lng = $this->getLng();
+
+		return craft()->coordinates->getUrl($lat, $lng);
+	}
+
 	public function __toString()
 	{
 		return $this->getCoordinates();
