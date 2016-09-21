@@ -1,5 +1,15 @@
 [
 	{
+		"version": "1.3.0",
+		"downloadUrl": "https://github.com/benjamminf/craft-coordinates/archive/1.3.0.zip",
+		"date": "2016-09-21T15:41:00+10:00",
+		"notes": [
+			"[Added] Added ability to extract parts of an address (country, state, etc.)",
+			"[Added] Added URL parameter to coordinates model that links an address or set of coordinates to Google Maps",
+			"[Fixed] Fixed name of `addressData` function"
+		]
+	},
+	{
 		"version": "1.2.0",
 		"downloadUrl": "https://github.com/benjamminf/craft-coordinates/archive/1.2.0.zip",
 		"date": "2016-09-11T11:14:20+10:00",
